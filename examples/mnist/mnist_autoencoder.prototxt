@@ -11,7 +11,7 @@ layer {
   }
   data_param {
     source: "examples/mnist/mnist_train_lmdb"
-    batch_size: 100
+    batch_size: 1
     backend: LMDB
   }
 }
@@ -27,8 +27,8 @@ layer {
     scale: 0.0039215684
   }
   data_param {
-    source: "examples/mnist/mnist_train_lmdb"
-    batch_size: 100
+    source: "./examples/mnist/mnist_train_lmdb"
+    batch_size: 1
     backend: LMDB
   }
 }
@@ -44,8 +44,8 @@ layer {
     scale: 0.0039215684
   }
   data_param {
-    source: "examples/mnist/mnist_test_lmdb"
-    batch_size: 100
+    source: "./examples/mnist/mnist_test_lmdb"
+    batch_size: 1
     backend: LMDB
   }
 }
@@ -301,23 +301,34 @@ layer {
 }
 layer {
   name: "loss"
-  type: "SigmoidCrossEntropyLoss"
+  type: "SmoothL1Loss"
+	#type: "EuclideanLoss"
+	#type: "SigmoidCrossEntropyLoss"
   bottom: "decode1"
   bottom: "flatdata"
   top: "cross_entropy_loss"
   loss_weight: 1
 }
-layer {
-  name: "decode1neuron"
-  type: "Sigmoid"
-  bottom: "decode1"
-  top: "decode1neuron"
-}
-layer {
-  name: "loss"
-  type: "EuclideanLoss"
-  bottom: "decode1neuron"
-  bottom: "flatdata"
-  top: "l2_error"
-  loss_weight: 0
-}
+#layer {
+#  name: "decode1neuron"
+#  type: "Sigmoid"
+#  bottom: "decode1"
+#  top: "decode1neuron"
+#}
+#layer {
+#  name: "loss"
+#  type: "EuclideanLoss"
+#  bottom: "decode1neuron"
+#  bottom: "flatdata"
+#  top: "l2_error"
+#  loss_weight: 1
+#}
+#layer {
+#  name: "loss"
+#  type: "SmoothL1Loss"
+#  bottom: "decode1neuron"
+#  bottom: "flatdata"
+#  #bottom: "bbox_loss_weights"
+#  top: "l2_error"
+#  loss_weight: 0
+#}
