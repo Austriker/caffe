@@ -1,3 +1,10 @@
+Added roi_pooling_layer.cpp/cu and smooth_L1_loss.cu from fast-rcnn implementation.
+
+Implemented smooth_L1_loss.cpp
+
+
+
+
 # Caffe
 
 [![Build Status](https://travis-ci.org/BVLC/caffe.svg?branch=master)](https://travis-ci.org/BVLC/caffe)
