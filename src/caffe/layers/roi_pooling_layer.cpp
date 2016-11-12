@@ -2,6 +2,11 @@
 #include <cfloat>
 #include <vector>
 
+#include "caffe/layer.hpp"
+#include "caffe/layers/concat_layer.hpp"
+#include "caffe/layers/flatten_layer.hpp"
+#include "caffe/layers/pooling_layer.hpp"
+#include "caffe/layers/split_layer.hpp"
 #include "caffe/layers/roi_pooling_layer.hpp"
 
 using std::max;
@@ -28,6 +33,10 @@ void ROIPoolingLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
 template <typename Dtype>
 void ROIPoolingLayer<Dtype>::Reshape(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top) {
+  CHECK_EQ(bottom[1]->channels(), 5)
+      << "roi input shape should be (R, 5) or (R, 5, 1, 1)";
+  CHECK_EQ(bottom[1]->num() * bottom[1]->channels(), bottom[1]->count())
+      << "roi input shape should be (R, 5) or (R, 5, 1, 1)";
   channels_ = bottom[0]->channels();
   height_ = bottom[0]->height();
   width_ = bottom[0]->width();

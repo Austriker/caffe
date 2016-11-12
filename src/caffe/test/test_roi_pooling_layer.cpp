@@ -11,7 +11,14 @@
 #include "caffe/blob.hpp"
 #include "caffe/common.hpp"
 #include "caffe/filler.hpp"
+
+#include "caffe/layer.hpp"
+#include "caffe/layers/concat_layer.hpp"
+#include "caffe/layers/flatten_layer.hpp"
+#include "caffe/layers/pooling_layer.hpp"
+#include "caffe/layers/split_layer.hpp"
 #include "caffe/layers/roi_pooling_layer.hpp"
+
 #include "caffe/test/test_caffe_main.hpp"
 #include "caffe/test/test_gradient_check_util.hpp"
 
