@@ -140,7 +140,7 @@ layer {
     lr_mult: 2
   }
   inner_product_param {
-    num_output: 10
+    num_output: 1
     weight_filler {
       type: "xavier"
     }
@@ -149,20 +149,26 @@ layer {
     }
   }
 }
-layer {
-  name: "accuracy"
-  type: "Accuracy"
-  bottom: "ip2"
-  bottom: "label"
-  top: "accuracy"
-  include {
-    phase: TEST
-  }
-}
+#layer {
+#  name: "loss"
+#  type: "SoftmaxWithLoss"
+#  bottom: "ip2"
+#  bottom: "label"
+#  top: "loss"
+#}
+#layer: {
+# name: "loss"
+# type: "EuclideanLoss"
+# bottom: "ip2"
+# bottom: "label"
+# top: "loss"
+#}
 layer {
   name: "loss"
-  type: "SoftmaxWithLoss"
+  type: "SmoothL1Loss"
   bottom: "ip2"
   bottom: "label"
+  #bottom: "bbox_loss_weights"
   top: "loss"
-}
+  #loss_weight: 1
+};

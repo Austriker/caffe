@@ -4,10 +4,8 @@
 #include <vector>
 
 #include "caffe/blob.hpp"
-#include "caffe/common.hpp"
 #include "caffe/layer.hpp"
 #include "caffe/proto/caffe.pb.h"
-
 namespace caffe {
 
 /** 
@@ -39,10 +37,7 @@ namespace caffe {
  *  - spatial_scale. Multiplicative spatial scale factor to translate ROI
  *  coordinates from their input scale to the scale used when pooling.
  *
- * Fast R-CNN
- * Written by Ross Girshick
  */
-
 template <typename Dtype>
 class ROIPoolingLayer : public Layer<Dtype> {
  public:
@@ -59,6 +54,13 @@ class ROIPoolingLayer : public Layer<Dtype> {
   virtual inline int MaxBottomBlobs() const { return 2; }
   virtual inline int MinTopBlobs() const { return 1; }
   virtual inline int MaxTopBlobs() const { return 1; }
+  /**
+   * ROIPoolingLayer can only back propagate to bottom[0] (feature map),
+   * but cannot back propagate to bottom[1] (roi list).
+   */
+  virtual inline bool AllowForceBackward(const int bottom_index) const {
+    return (bottom_index == 0);
+  }
 
  protected:
   virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom,
