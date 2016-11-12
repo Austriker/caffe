@@ -13,8 +13,6 @@
 #include "caffe/test/test_gradient_check_util.hpp"
 namespace caffe {
 
-//typedef ::testing::Types<GPUDevice<float>, GPUDevice<double> > TestDtypesGPU;
-
 template <typename TypeParam>
 class SmoothL1LossLayerTest : public MultiDeviceTest<TypeParam> {
   typedef typename TypeParam::Dtype Dtype;
@@ -38,10 +36,10 @@ class SmoothL1LossLayerTest : public MultiDeviceTest<TypeParam> {
     filler.Fill(this->blob_bottom_label_);
     blob_bottom_vec_.push_back(blob_bottom_label_);
 
-    //const_filler.Fill(this->blob_bottom_inside_weights_);
+    // const_filler.Fill(this->blob_bottom_inside_weights_);
     filler.Fill(this->blob_bottom_inside_weights_);
     blob_bottom_vec_.push_back(blob_bottom_inside_weights_);
-    //const_filler.Fill(this->blob_bottom_outside_weights_);
+    // const_filler.Fill(this->blob_bottom_outside_weights_);
     filler.Fill(this->blob_bottom_outside_weights_);
     blob_bottom_vec_.push_back(blob_bottom_outside_weights_);
 
@@ -64,7 +62,6 @@ class SmoothL1LossLayerTest : public MultiDeviceTest<TypeParam> {
   vector<Blob<Dtype>*> blob_top_vec_;
 };
 
-//TYPED_TEST_CASE(SmoothL1LossLayerTest, TestDtypesGPU);
 TYPED_TEST_CASE(SmoothL1LossLayerTest, TestDtypesAndDevices);
 
 TYPED_TEST(SmoothL1LossLayerTest, TestGradient) {
