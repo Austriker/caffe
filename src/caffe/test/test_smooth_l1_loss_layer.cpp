@@ -11,12 +11,12 @@
 #include "caffe/layers/smooth_l1_loss_layer.hpp"
 #include "caffe/test/test_caffe_main.hpp"
 #include "caffe/test/test_gradient_check_util.hpp"
-
 namespace caffe {
 
-#ifndef CPU_ONLY
-template <typename Dtype>
-class SmoothL1LossLayerTest : public GPUDeviceTest<Dtype> {
+template <typename TypeParam>
+class SmoothL1LossLayerTest : public MultiDeviceTest<TypeParam> {
+  typedef typename TypeParam::Dtype Dtype;
+
  protected:
   SmoothL1LossLayerTest()
       : blob_bottom_data_(new Blob<Dtype>(10, 5, 1, 1)),
@@ -33,13 +33,13 @@ class SmoothL1LossLayerTest : public GPUDeviceTest<Dtype> {
 
     filler.Fill(this->blob_bottom_data_);
     blob_bottom_vec_.push_back(blob_bottom_data_);
-
     filler.Fill(this->blob_bottom_label_);
     blob_bottom_vec_.push_back(blob_bottom_label_);
 
+    // const_filler.Fill(this->blob_bottom_inside_weights_);
     filler.Fill(this->blob_bottom_inside_weights_);
     blob_bottom_vec_.push_back(blob_bottom_inside_weights_);
-
+    // const_filler.Fill(this->blob_bottom_outside_weights_);
     filler.Fill(this->blob_bottom_outside_weights_);
     blob_bottom_vec_.push_back(blob_bottom_outside_weights_);
 
@@ -62,24 +62,24 @@ class SmoothL1LossLayerTest : public GPUDeviceTest<Dtype> {
   vector<Blob<Dtype>*> blob_top_vec_;
 };
 
-TYPED_TEST_CASE(SmoothL1LossLayerTest, TestDtypes);
+TYPED_TEST_CASE(SmoothL1LossLayerTest, TestDtypesAndDevices);
 
 TYPED_TEST(SmoothL1LossLayerTest, TestGradient) {
+  typedef typename TypeParam::Dtype Dtype;
   LayerParameter layer_param;
   SmoothL1LossParameter* loss_param =
       layer_param.mutable_smooth_l1_loss_param();
   loss_param->set_sigma(2.4);
 
-  const TypeParam kLossWeight = 3.7;
+  const Dtype kLossWeight = 3.7;
   layer_param.add_loss_weight(kLossWeight);
-  SmoothL1LossLayer<TypeParam> layer(layer_param);
+  SmoothL1LossLayer<Dtype> layer(layer_param);
   layer.SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
-  GradientChecker<TypeParam> checker(1e-2, 1e-2, 1701);
+  GradientChecker<Dtype> checker(1e-2, 1e-2, 1701);
   checker.CheckGradientExhaustive(&layer, this->blob_bottom_vec_,
       this->blob_top_vec_, 0);
   checker.CheckGradientExhaustive(&layer, this->blob_bottom_vec_,
       this->blob_top_vec_, 1);
 }
-#endif
 
 }  // namespace caffe
