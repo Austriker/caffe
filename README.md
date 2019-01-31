@@ -1,3 +1,6 @@
+Added CPU support for *smooth_l1_loss_layer*
+
+=================
 # Caffe
 
 [![Build Status](https://travis-ci.org/BVLC/caffe.svg?branch=master)](https://travis-ci.org/BVLC/caffe)
